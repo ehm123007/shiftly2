@@ -137,18 +137,31 @@ export interface SessionInfo {
 }
 
 export function loadSession(): SessionInfo | null {
-  const session = getStorage<SessionInfo | null>(KEYS.SESSION, null);
-  if (session && session.userId && session.userId.startsWith('SCB-')) {
-    session.userId = session.userId.replace('SCB-', 'EMP-');
+  try {
+    const raw = sessionStorage.getItem(KEYS.SESSION);
+    if (!raw) return null;
+    const session: SessionInfo = JSON.parse(raw);
+    if (session && session.userId && session.userId.startsWith('SCB-')) {
+      session.userId = session.userId.replace('SCB-', 'EMP-');
+    }
+    return session;
+  } catch (e) {
+    console.error('Failed to parse session from sessionStorage:', e);
+    return null;
   }
-  return session;
 }
 
 export function saveSession(session: SessionInfo | null): void {
-  if (session) {
-    setStorage(KEYS.SESSION, session);
-  } else {
+  try {
+    if (session) {
+      sessionStorage.setItem(KEYS.SESSION, JSON.stringify(session));
+    } else {
+      sessionStorage.removeItem(KEYS.SESSION);
+    }
+    // Also remove from localStorage if any old session was stored
     localStorage.removeItem(KEYS.SESSION);
+  } catch (e) {
+    console.error('Failed to set session in sessionStorage:', e);
   }
 }
 
