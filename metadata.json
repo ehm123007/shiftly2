@@ -1,0 +1,6 @@
+{
+  "name": "Shiftly Enterprise Roster & Shift Exchange",
+  "description": "Workforce management, shift swaps, and roster coordination with policy compliance and EH extra hours tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
